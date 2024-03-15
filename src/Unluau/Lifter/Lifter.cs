@@ -428,6 +428,8 @@ namespace Unluau
                         bool auxUsed = false;
                         Expression condition = GetCondition(registers, instruction, function.Instructions[pc + 1], function.Constants, ref auxUsed);
 
+
+
                         // If the next instruction is a JUMPBACK instruction, then we must be dealing with a repeat..until loop.
                         Instruction nextInstruction = function.Instructions[pc + 1];
                         if (nextInstruction.GetProperties().Code == OpCode.JUMPBACK)
@@ -577,6 +579,26 @@ namespace Unluau
                         registers.LoadRegister(instruction.A, expression, block, pc, expression.Decleration.Type);
                         break;
                     }
+                    /*case OpCode.SETUPVAL:
+                    {
+                        LocalExpression expression = function.Upvalues[instruction.B];
+
+                        block.AddStatement(new Assignment(expression, registers.GetExpression(instruction.A)), pc);
+
+                        break;
+                    }
+                    case OpCode.CLOSEUPVALS:
+                    {
+                        // Close upvalues up to a certain index
+                        int upToIndex = instruction.A;
+
+                        for (int i = registers.Top; i >= upToIndex; i--)
+                        {
+                            registers.FreeRegister(i, block);
+                        }
+
+                        break;
+                    }*/
                     case OpCode.RETURN:
                     {
                         IList<Expression> expressions = new List<Expression>();
@@ -704,9 +726,12 @@ namespace Unluau
             OpCode code = instruction.GetProperties().Code;
 
             if (code == OpCode.JUMPIF || code == OpCode.JUMPIFNOT)
-                return code == OpCode.JUMPIFNOT ? registers.GetExpression(instruction.A)
-                            : new UnaryExpression(registers.GetExpression(instruction.A), UnaryExpression.UnaryOperation.Not);
+            {
+                Expression expression = registers.GetExpression(instruction.A) ?? registers.GetExpression(instruction.C);
 
+                return code == OpCode.JUMPIFNOT ? expression
+                            : new UnaryExpression(expression, UnaryExpression.UnaryOperation.Not);
+            }
             auxUsed = true;
 
             BinaryExpression.BinaryOperation operation = BinaryExpression.GetBinaryOperation(code);
