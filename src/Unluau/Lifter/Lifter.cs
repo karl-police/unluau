@@ -579,7 +579,7 @@ namespace Unluau
                         registers.LoadRegister(instruction.A, expression, block, pc, expression.Decleration.Type);
                         break;
                     }
-                    /*case OpCode.SETUPVAL:
+                    case OpCode.SETUPVAL:
                     {
                         LocalExpression expression = function.Upvalues[instruction.B];
 
@@ -587,7 +587,7 @@ namespace Unluau
 
                         break;
                     }
-                    case OpCode.CLOSEUPVALS:
+                    /*case OpCode.CLOSEUPVALS:
                     {
                         // Close upvalues up to a certain index
                         int upToIndex = instruction.A;
