@@ -769,18 +769,25 @@ namespace Unluau
 
             Expression? right = null;
 
-            if (operation == BinaryExpression.BinaryOperation.CompareEq && code != OpCode.JUMPIFEQ)
-            {
-                right = code switch
+            /*if ((int)aux.Value >= 0 && (int)aux.Value < constants.Count)
+            {*/
+                if (operation == BinaryExpression.BinaryOperation.CompareEq && code != OpCode.JUMPIFEQ)
                 {
-                    // Both instructions contain a constant index as the aux instruction.
-                    OpCode.JUMPXEQKN or OpCode.JUMPXEQKS => ConstantToExpression(constants[(int)aux.Value & 0xffffff]),
-                    OpCode.JUMPXEQKNIL => new NilLiteral(),
-                    _ => ConstantToExpression(constants[(int)aux.Value]),
-                };
-            }
+                    right = code switch
+                    {
+                        // Both instructions contain a constant index as the aux instruction.
+                        OpCode.JUMPXEQKN or OpCode.JUMPXEQKS => ConstantToExpression(constants[(int)aux.Value & 0xffffff]),
+                        OpCode.JUMPXEQKNIL => new NilLiteral(),
+                        _ => ConstantToExpression(constants[(int)aux.Value]),
+                    };
+                }
+                else
+                    right = registers.GetExpression((int)aux.Value);
+            /*}
             else
-                right = registers.GetExpression((int)aux.Value);
+            {
+                right = (Expression)new StringLiteral("__UNLUAU_RIGHT_CONSTANT_ERROR");
+            }*/
 
             return new BinaryExpression(registers.GetExpression(instruction.A), operation, right!);
         }
