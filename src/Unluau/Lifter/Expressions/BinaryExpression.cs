@@ -101,7 +101,7 @@ namespace Unluau
                 case BinaryOperation.Power:
                     return "^";
                 case BinaryOperation.Concat:
-                    return "...";
+                    return "..";
                 case BinaryOperation.CompareNe:
                     return "~=";
                 case BinaryOperation.CompareEq:
