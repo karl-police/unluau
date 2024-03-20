@@ -326,7 +326,7 @@ namespace Unluau
 
                         NameIndex nameIndex = new NameIndex(table, target.Value);
 
-                        // 
+                        // For debugging stuff
                         /*if (nameIndex.Name == "Id") { 
                             nameIndex = nameIndex;
                         }*/
