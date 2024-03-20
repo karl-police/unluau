@@ -118,7 +118,7 @@ namespace Unluau
                         if (isNamecall) { 
                             if (nameExpression == null) { 
                                 // TODO: Prevent null from happening in the first place.
-                                nameExpression = new Global("UNLUAU_ERROR");
+                                nameExpression = new Global("__UNLUAU_ERROR");
                             }
                         }
 
@@ -336,7 +336,7 @@ namespace Unluau
                         // I think Unluau has some issues with JUMP instructions
                         if (assignmentExpression == null) {
                             // So we just overwrite this in the Pseudo Code Writer
-                            assignmentExpression = new Global("CHECK_FOR_UPVALUES");
+                            assignmentExpression = new Global("__UNLUAU_CHECK_FOR_UPVALUES");
                         }
 
                         block.AddStatement(new Assignment(nameIndex, assignmentExpression), pc);
