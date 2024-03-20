@@ -11,6 +11,14 @@ namespace Unluau
 {
     public class NilLiteral : Expression
     {
+        /*public string Value {
+            get => "nil";
+        }
+
+        public override void Write(Output output)
+        {
+            output.Write(Value.ToString());
+        }*/
         public override void Write(Output output)
         {
             output.Write("nil");

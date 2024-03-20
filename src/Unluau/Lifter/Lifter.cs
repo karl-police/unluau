@@ -115,6 +115,13 @@ namespace Unluau
                         bool isNamecall = properties.Code == OpCode.NAMECALL;
                         Expression nameExpression = registers.GetExpression(instruction.B);
 
+                        if (isNamecall) { 
+                            if (nameExpression == null) { 
+                                // TODO: Prevent null from happening in the first place.
+                                nameExpression = new Global("UNLUAU_ERROR");
+                            }
+                        }
+
                         Expression expression = new NameIndex(nameExpression, targetValue, isNamecall);
 
                         // This is a namecall and the function name is format we need to account for string interpolation
@@ -190,6 +197,14 @@ namespace Unluau
                             registers.FreeRegister(instruction.A, block);
 
                         Expression call = new FunctionCall(callFunction, arguments);
+
+                        /*if (call.GetValue() is NameIndex nameIndex)
+                        {
+                            if (nameIndex.Name == "FindFirstChild")
+                                {
+                                    nameIndex = nameIndex;
+                                }
+                        }*/
 
                         // Note: we do this for string interpolation to work
                         var callFunctionValue = callFunction.GetValue();
@@ -311,7 +326,20 @@ namespace Unluau
 
                         NameIndex nameIndex = new NameIndex(table, target.Value);
 
-                        block.AddStatement(new Assignment(nameIndex, registers.GetExpression(instruction.A)), pc);
+                        // 
+                        /*if (nameIndex.Name == "Id") { 
+                            nameIndex = nameIndex;
+                        }*/
+
+                        Expression assignmentExpression = registers.GetExpression(instruction.A);
+
+                        // I think Unluau has some issues with JUMP instructions
+                        if (assignmentExpression == null) {
+                            // So we just overwrite this in the Pseudo Code Writer
+                            assignmentExpression = new Global("CHECK_FOR_UPVALUES");
+                        }
+
+                        block.AddStatement(new Assignment(nameIndex, assignmentExpression), pc);
                         break;
                     }
                     case OpCode.SETTABLE:
