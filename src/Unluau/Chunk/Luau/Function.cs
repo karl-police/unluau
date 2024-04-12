@@ -348,6 +348,8 @@ namespace Unluau.Chunk.Luau
                 var instruction = Instructions[pc];
                 var context = GetContext(pc, pc);
 
+                Console.WriteLine(instruction.Code);
+
                 switch (instruction.Code)
                 {
                     case OpCode.LOADNIL:
@@ -471,6 +473,10 @@ namespace Unluau.Chunk.Luau
                         // The C operand of the FASTCALL instruction is the jump index for the CALL instruction.
                         else if (instruction.Code != OpCode.CALL)
                             instruction = Instructions[pc += instruction.C + 1];
+
+                        // Something was wrong here
+                        if (instruction.Code == OpCode.FASTCALL2K)
+                            instruction = Instructions[pc += instruction.C];
 
                         if (instruction.Code != OpCode.FASTCALL2K)
                         {
@@ -741,6 +747,10 @@ namespace Unluau.Chunk.Luau
                         block.Statements.Add(new LoadValue(context, ra, unary));
                         break;
                     }
+
+                    default:
+                        Console.WriteLine("Skipped: {0}", instruction.Code);
+                        break;
                 }
             }
 
